@@ -30,9 +30,11 @@ def extract_substring(file_path, start_marker, end_marker):
 
     return content[start_index:end_index]
 
+queries = ['Kota', 'Factory']
+file_path = f"./temp_dir_files/{queries[0]}_{queries[1]}.txt"
 
 # Example usage
-file_path = './temp_dir_files/kota_factory.txt'
+# file_path = './temp_dir_files/kota_factory.txt'
 start_marker = 'q='
 end_marker = '&amp;'
 substring = extract_substring(file_path, start_marker, end_marker)

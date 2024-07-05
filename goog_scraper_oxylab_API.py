@@ -2,10 +2,13 @@
 
 import requests
 from pprint import pprint
+import json
+
+queries = ['Kota', 'Factory']
 
 payload = {
     'source': 'google',
-    'url': 'https://www.google.com/search?q=Kota%20Factory'
+    'url': f'https://www.google.com/search?q={queries[0]}%20{queries[1]}'
 }
 
 r = requests.request(
@@ -16,3 +19,10 @@ r = requests.request(
 )
 
 pprint(r.json())
+# let's save the response to a file:
+file_path = f"./temp_dir_files/{queries[0]}_{queries[1]}.txt"
+with open(file_path, 'w') as file:
+    json.dump(r.json(), file, indent=4)
+    # indent 4 is used for pretty print
+    # where will this file be saved ?
+
