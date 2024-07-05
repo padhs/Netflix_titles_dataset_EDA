@@ -1,4 +1,4 @@
-#retrieve both director and creator
+# retrieve both director and creator
 
 def extract_substrings(file_path, start_marker, end_marker):
     with open(file_path, 'r') as file:
@@ -40,6 +40,8 @@ start_marker = 'q='
 end_marker = '&amp;'
 substrings = extract_substrings(file_path, start_marker, end_marker)
 
-# Remove '+' in the substrings
-for idx, substring in enumerate(substrings):
+# Replace '+' in the substrings with ' '
+cleaned_substrings = [item.replace('+', ' ') for item in substrings]
+# print(cleaned_substrings)
+for idx, substring in enumerate(cleaned_substrings):
     print(f"Substring {idx + 1}: {substring}")

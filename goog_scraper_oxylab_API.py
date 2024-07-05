@@ -1,3 +1,5 @@
+# used oxylabs.io free api to get data from google search
+
 import requests
 from pprint import pprint
 
