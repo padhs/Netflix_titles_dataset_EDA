@@ -9,16 +9,19 @@ import plotly.express as px
 # load the dataset
 df = pd.read_csv('./dataset/netflix_titles.csv')
 print(df.head())
+# there are some nulls
 print(df.info())
 print(df.shape)
 
-# there are some nulls
 print(df.columns)
-print(df.isnull().sum())
 
-# The max null counts are in directors, cast and country of origin
-# workflow: can't change the nulls in director, cast, country & date_added. It will be misleading. better to leave them as nulls
-# workflow2: random sampling for ratings and duration. alternative: remove those records
+'''
+The max null counts are in directors, cast and country of origin
+workflow: can't change the nulls in director, cast, country & date_added. It will be misleading. 
+better to leave them as nulls
+workflow2: random sampling for ratings and duration. alternative: remove those records
+'''
+
 # visualizing missing values:
 sns.heatmap(df.isnull())
 plt.show()
@@ -51,4 +54,5 @@ need to make further decision before analysis.
 For the scope of this project, i'm leaving the data as is
 '''
 
-# edit: alternative method --> scrape from google search results ?
+# edit: alternative method --> scrape from google search results ? - success. Let's fill the missing values
+director_df = df['title', 'director']

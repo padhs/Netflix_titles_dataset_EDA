@@ -9,6 +9,12 @@ queries = ['Kota', 'Factory']
 payload = {
     'source': 'google',
     'url': f'https://www.google.com/search?q={queries[0]}%20{queries[1]}'
+    '''
+        we don't have to include %20 for space character. api can pass on query replacing the space with %20.
+        But good coding practices dictate we should include it from our end.
+        However, I won't be doing that in order to save time. 
+        I might later update this script with proper code practices.
+    '''
 }
 
 r = requests.request(
