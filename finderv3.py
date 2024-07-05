@@ -14,19 +14,20 @@ def extract_substring(file_path, start_marker, end_marker):
         if creat_by_index != -1:
             search_start_index = creat_by_index + len('creat_by')
         else:
-            return "Neither 'direct_by' nor 'creat_by' markers found"
+            return "null"
+        # there is no data found for director and/or creator
 
     # Find the start marker after the identified marker
     start_index = content.find(start_marker, search_start_index)
     if start_index == -1:
-        return "Start marker not found after identified marker"
+        return "start_marker_null"
 
     start_index += len(start_marker)
 
     # Find the end marker after the start marker
     end_index = content.find(end_marker, start_index)
     if end_index == -1:
-        return "End marker not found after start marker"
+        return "end_marker_null"
 
     return content[start_index:end_index]
 

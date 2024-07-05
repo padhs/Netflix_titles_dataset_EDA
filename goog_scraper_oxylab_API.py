@@ -15,6 +15,7 @@ r = requests.request(
     'POST',
     'https://realtime.oxylabs.io/v1/queries',
     auth=('bauwa_hqz5Z', '9tVWcBajS62Dr'),
+    # put your passkey in 'PASSKEY'
     json=payload
 )
 
@@ -24,5 +25,4 @@ file_path = f"./temp_dir_files/{queries[0]}_{queries[1]}.txt"
 with open(file_path, 'w') as file:
     json.dump(r.json(), file, indent=4)
     # indent 4 is used for pretty print
-    # where will this file be saved ?
 
