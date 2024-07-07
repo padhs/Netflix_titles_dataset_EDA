@@ -35,7 +35,7 @@ def extract_substrings(file_path, start_marker, end_marker):
 
 
 # Example usage
-file_path = './temp_dir_files/kota_factory.txt'
+file_path = 'ntflx_dirs_queries/kota_factory.txt'
 start_marker = 'q='
 end_marker = '&amp;'
 substrings = extract_substrings(file_path, start_marker, end_marker)
