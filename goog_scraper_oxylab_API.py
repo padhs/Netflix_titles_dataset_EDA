@@ -1,18 +1,29 @@
 # used oxylabs.io free api to get data from google search
 
 import requests
-from pprint import pprint
+# from pprint import pprint
 import json
 import pandas as pd
 
-df = pd.read_csv('./dataset/ntflx_without_dirs.csv')
+df = pd.read_csv('./dataset/uncompleted_ntflx_dirs.csv')
 
 # dataframe info
 print(df.info())
 title = df['title']
 
 
+def save_to_file(file_name, json_data):
+    file_path = f"./ntflx_dirs_queries/{file_name}.txt"
+    with open(file_path, 'w') as file:
+        json.dump(json_data, file, indent=4)
+        # indent 4 is used for pretty print
+
+
+query_errors = []
+
+
 def queries_for_api(param):
+    global query_errors
     for i in param:
         print(i)
         payload = {
@@ -35,26 +46,40 @@ def queries_for_api(param):
             json=payload
         )
 
-        pprint(r.json())
+        # pprint(r.json())
         # let's save the response to a file:
         if r.status_code == 200:
-            file_path = f"./ntflx_dirs_queries/{i}.txt"
-            with open(file_path, 'w') as file:
-                json.dump(r.json(), file, indent=4)
-                # indent 4 is used for pretty print
             if '/' in i:
-                i.replace('/', '-')
-                file_path = f"./ntflx_dirs_queries/{i}.txt"
-                with open(file_path, 'w') as file:
-                    json.dump(r.json(), file, indent=4)
-                    # indent 4 is used for pretty print
+                i = i.replace('/', '_6_9')
+                save_to_file(i, r.json())
+            else:
+                save_to_file(i, r.json())
+        elif r.status_code == 500 or r.status_code == 400 or r.status_code == 404:
+            print(f'code: {r.status_code}')
+            query_errors = query_errors.append(i)
+        elif r.status_code == 408 or r.status_code == 504:
+            print(f'code: {r.status_code} - Request/Gateway Timeout')
+            query_errors = query_errors.append(i)
+        else:
+            print('Don\'t know what happened')
+            query_errors = query_errors.append(i)
 
 
 queries_for_api(df['title'])
 '''
 This throws in an error because in index 57, the tile of the movie has a '/' which means a subdirectory
 in our set filepath. Since it hasn't been created yet, python can't find it. Need to check for further such characters
-Let's replace it with '-'. Remember to change it later
+Let's replace it with '_6_9'. (a special substring. not likely to be any movie title) Remember to change it later
 '''
+
+# find which calls had no results:
+print(query_errors)
+
+# Try to run calls again for these:
+queries_for_api(query_errors)
+
+# check again which api calls had no results:
+print(query_errors)
+# check if you can find data online by manual google search, if not put null values.
 
 # invoke api calls for cast as well
