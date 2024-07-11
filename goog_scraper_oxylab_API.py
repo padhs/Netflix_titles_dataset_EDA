@@ -19,7 +19,10 @@ def save_to_file(file_name, json_data):
         # indent 4 is used for pretty print
 
 
-query_errors = []
+# creating a dictionary to store the titles which resulted in api call error (error_handling)
+keys = ['title']
+values = ['error_code']
+query_errors = dict(zip(keys, values))
 
 
 def queries_for_api(param):
@@ -56,13 +59,13 @@ def queries_for_api(param):
                 save_to_file(i, r.json())
         elif r.status_code == 500 or r.status_code == 400 or r.status_code == 404:
             print(f'code: {r.status_code}')
-            query_errors = query_errors.append(i)
+            query_errors[i] = str(r.status_code)
         elif r.status_code == 408 or r.status_code == 504:
             print(f'code: {r.status_code} - Request/Gateway Timeout')
-            query_errors = query_errors.append(i)
+            query_errors[i] = str(r.status_code)
         else:
             print('Don\'t know what happened')
-            query_errors = query_errors.append(i)
+            query_errors[i] = str(r.status_code)
 
 
 queries_for_api(df['title'])
@@ -80,6 +83,3 @@ queries_for_api(query_errors)
 
 # check again which api calls had no results:
 print(query_errors)
-# check if you can find data online by manual google search, if not put null values.
-
-# invoke api calls for cast as well
