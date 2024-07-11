@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 
 
 def extract_substring(file_path, begin_marker, last_marker):
@@ -21,14 +22,14 @@ def extract_substring(file_path, begin_marker, last_marker):
     # Find the start marker after the identified marker
     start_index = content.find(begin_marker, search_start_index)
     if start_index == -1:
-        return "Start marker null"
+        return "Start marker not found"
 
     start_index += len(begin_marker)
 
     # Find the end marker after the start marker
     end_index = content.find(last_marker, start_index)
     if end_index == -1:
-        return "End marker null"
+        return "End marker not found"
 
     return content[start_index:end_index]
 
@@ -45,7 +46,7 @@ def process_files_in_directory(directory_path, start_marker, end_marker):
             _txt_remove = cleaned_text_file.replace('.txt', '')
             all_results[_txt_remove] = cleaned_director_substring
             # remove the file after substring extraction:
-            # os.remove(file_path)
+            os.remove(file_path)
     return all_results
 
 
@@ -55,20 +56,12 @@ start_marker = 'q='
 end_marker = '&amp;'
 results = process_files_in_directory(directory_path, start_marker, end_marker)
 
-# Print results
-for filename, substring in results.items():
-    print(results)
-    print(f"File: {filename}")
-    print(f"Substring: {substring}")
 
-'''
-This should print a dictionary of string:string datatype
-We will use pandas to create a df of this dictionary.
-save it to a csv file
-since the title and director are in key:value paris, the csv file will have wide dataset
-transpose it to convert into long dataset
-merge the csv with original dataset.
-Do the same with cast ?
-'''
-
+# input directors from dictionary
+df = pd.read_csv('./dataset/netflix_titles.csv')
 # match title and fill the directors in the dataset
+for title, director in results.items():
+    df.loc[(df['title'] == title) & (df['director'].isna()), 'director'] = director
+
+df.to_csv('./dataset/ntflx_titles_with_dirs.csv')
+print(df.info())
