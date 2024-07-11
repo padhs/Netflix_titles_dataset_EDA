@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-import numpy as np
 
 
 def extract_substring(file_path, begin_marker, last_marker):

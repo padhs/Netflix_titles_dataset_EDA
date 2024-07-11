@@ -55,4 +55,92 @@ For the scope of this project, i'm leaving the data as is
 '''
 
 # edit: alternative method --> scrape from google search results ? - success. Let's fill the missing values
-director_df = df['title', 'director']
+dir_df = pd.read_csv('./dataset/ntflx_titles_with_dirs.csv')
+print(dir_df.info())
+
+# check for duplicates
+print(df['show_id'].duplicated().sum())
+
+# types of content(distribution)
+print(df['type'].value_counts())
+# movie = 6131 tv shows = 2676. 3x more movies than tv shows. user insight: subscribers watch more movies than tv shows
+fig = px.bar(x=df["type"].value_counts().index,
+             y=df["type"].value_counts().values,
+             color=df["type"].value_counts().index)
+
+# layout with customized title, axis labels, and background colors
+fig.update_layout(
+    title={
+        'text': "Distribution of Content Type",
+        'font': {'color': 'white'}
+    },
+    xaxis_title={
+        'text': "Content Type",
+        'font': {'color': 'white'}
+    },
+    yaxis_title={
+        'text': "Count",
+        'font': {'color': 'white'}
+    },
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='black',
+    font=dict(color='white')
+)
+
+fig.show()
+
+# same viz but in pie-chart form
+fig = px.pie(df, values=df["type"].value_counts().values, names=df["type"].value_counts().index)
+
+fig.update_layout(title="Distribution of Content Type", plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='black', font=dict(color='white'))
+
+fig.show()
+
+# distribution by release_years/ sort by release year:
+print(df['release_year'].value_counts())
+
+fig = px.bar(x=df["release_year"].value_counts().index,
+             y=df["release_year"].value_counts().values,
+             color=df["release_year"].value_counts().index)
+
+fig.update_layout(
+    title={
+        'text': "Highest Release Years for TV Shows and Movies",
+        'font': {'color': 'white'}
+    },
+    xaxis_title={
+        'text': "Release Year",
+        'font': {'color': 'white'}
+    },
+    yaxis_title={
+        'text': "Count",
+        'font': {'color': 'white'}
+    },
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='black',
+    font=dict(color='white')
+)
+'''
+insight: 
+Highest no. of content released in 2018. causation of peak: Covid-19, which halted film productions and caused 
+late releases of movies as per the trend, the no. of movies were supposed to increase but due to economic constraints
+the new trend shows a decline in no. of movies that released in the following years
+'''
+
+# viz distribution by release years grouped by movies and tv-shows
+grouped_data = df.groupby(['release_year', 'type']).size().reset_index(name='count')
+
+fig = px.bar(grouped_data, x='release_year', y='count', color='type',
+             title="Highest Release Years for TV Shows and Movies",
+             labels={'release_year': "Release Year", 'count': "Count", 'type': "Type"},
+             color_discrete_map={'Movie': 'blue', 'TV Show': 'green'})
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='black',
+    font=dict(color='white')
+)
+highest_release_year = grouped_data[grouped_data["count"] == grouped_data["count"].max()]["release_year"].iloc[0]
+highest_type = grouped_data[grouped_data["count"] == grouped_data["count"].max()]["type"].iloc[0]
+print(f"The highest type on the release year {highest_release_year} is {highest_type}.")
+fig.show()
+

@@ -17,6 +17,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/dataset/ntflx_titles_with_dirs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/dataset/ntflx_without_dirs.csv">
           <value>
             <Attribute>
