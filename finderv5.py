@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 
-def extract_substring(file_path, start_marker, end_marker):
+def extract_substring(file_path, begin_marker, last_marker):
     with open(file_path, 'r') as file:
         content = file.read()
 
@@ -19,14 +19,14 @@ def extract_substring(file_path, start_marker, end_marker):
             return "null"
 
     # Find the start marker after the identified marker
-    start_index = content.find(start_marker, search_start_index)
+    start_index = content.find(begin_marker, search_start_index)
     if start_index == -1:
         return "Start marker null"
 
-    start_index += len(start_marker)
+    start_index += len(begin_marker)
 
     # Find the end marker after the start marker
-    end_index = content.find(end_marker, start_index)
+    end_index = content.find(last_marker, start_index)
     if end_index == -1:
         return "End marker null"
 
@@ -39,9 +39,13 @@ def process_files_in_directory(directory_path, start_marker, end_marker):
         if textfile.endswith(".txt"):  # Process only text files
             file_path = os.path.join(directory_path, textfile)
             director_substring = extract_substring(file_path, start_marker, end_marker)
-            all_results[textfile] = director_substring
+            # Replace the '_6_9' with '/' & replace '+' with ' ' before storing it in a dictionary
+            cleaned_director_substring = director_substring.replace('+', ' ')
+            cleaned_text_file = textfile.replace('_6_9', '/')
+            _txt_remove = cleaned_text_file.replace('.txt', '')
+            all_results[_txt_remove] = cleaned_director_substring
             # remove the file after substring extraction:
-            os.remove(file_path)
+            # os.remove(file_path)
     return all_results
 
 
@@ -52,12 +56,10 @@ end_marker = '&amp;'
 results = process_files_in_directory(directory_path, start_marker, end_marker)
 
 # Print results
-'''
 for filename, substring in results.items():
     print(results)
     print(f"File: {filename}")
     print(f"Substring: {substring}")
-'''
 
 '''
 This should print a dictionary of string:string datatype
@@ -69,7 +71,4 @@ merge the csv with original dataset.
 Do the same with cast ?
 '''
 
-df = pd.DataFrame(results)
-transpose_df = df.transpose()
-transpose_df.to_csv('./dataset/transposed_dirs.csv')
-# last step: merge with original dataset in excel
+# match title and fill the directors in the dataset
