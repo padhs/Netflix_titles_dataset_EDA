@@ -2,7 +2,7 @@
 
 import requests
 from bs4 import BeautifulSoup
-from pprint import pprint
+# from pprint import pprint
 
 # URL of the page to scrape
 url = 'https://www.google.com/search?q=Kota%20Factory'

@@ -44,8 +44,7 @@ def queries_for_api(param):
         r = requests.request(
             'POST',
             'https://realtime.oxylabs.io/v1/queries',
-            auth=('bauwa_hqz5Z', '9tVWcBajS62Dr'),
-            # put your passkey in 'PASSKEY'
+            auth=('YOUR_USERNAME', 'YOUR_PASSWORD'),
             json=payload
         )
 

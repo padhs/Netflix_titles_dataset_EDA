@@ -1,7 +1,6 @@
 # EDA and insights from netflix dataset analysis + visualizations
 
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
@@ -143,4 +142,50 @@ highest_release_year = grouped_data[grouped_data["count"] == grouped_data["count
 highest_type = grouped_data[grouped_data["count"] == grouped_data["count"].max()]["type"].iloc[0]
 print(f"The highest type on the release year {highest_release_year} is {highest_type}.")
 fig.show()
+
+# content by country
+grouped_data = df.groupby(['type', 'country']).size().reset_index(name='count')
+grouped_data = grouped_data.sort_values(by="count", ascending=False)
+grouped_data = grouped_data.head(10)
+fig = px.bar(grouped_data, x='country', y='count', color='country',
+             title="Highest Countries for Movies&TV Show",
+             labels={'country': "Country", 'count': "Count"},
+             color_discrete_map={'United States': 'blue', 'India': 'green'})
+fig.update_layout(
+     plot_bgcolor='rgba(0,0,0,0)',
+     paper_bgcolor='black',
+     font=dict(color='white')
+ )
+fig.show()
+
+'''
+insight: 
+US is the country producing the largest content base followed by Bollywood & UK
+'''
+
+# content by duration
+fig = px.bar(grouped_data, x='duration', y='count', color='type',
+             title="Duration of Movies&TV Show",
+             labels={'duration': "Duration", 'count': "Count"},
+             color_discrete_map={'Short': 'blue', 'Long': 'green'})
+fig.update_layout(
+     plot_bgcolor='rgba(0,0,0,0)',
+     paper_bgcolor='black',
+     font=dict(color='white')
+ )
+
+grouped_data = df.groupby(['type', 'duration']).size().reset_index(name='count')
+
+grouped_data = grouped_data.sort_values(by="count", ascending=False)
+print(grouped_data)
+
+'''
+insight:
+we can see that 1 season is highest >1500. Which can mean that subscribers aren't liking the tv-shows releases 
+or simply because they lose interest or due to delay in production time.
+Almost all subscribers don't watch the full tv-shows and tv-shows which have more seasons are likely to lose interest
+over the period. 
+But for flicks and movies, 1.5 to 2 hour mark seem to be the right spot having the most subscriber interest
+subscribers don't stream too short or too long movies, say > 2.5 hours.
+'''
 
